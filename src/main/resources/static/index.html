@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>URL Shortener</title>
+</head>
+<body>
+<h1>Create a Short URL</h1>
+<form action="/api/create-short-url" method="post">
+    <label for="originalUrl">Original URL:</label><br>
+    <input type="text" id="originalUrl" name="url" required><br><br>
+
+    <label for="shortId">Custom Short ID (optional):</label><br>
+    <input type="text" id="shortId" name="shortId"><br><br>
+
+    <label for="ttl">Time to Live (TTL) in seconds (optional):</label><br>
+    <input type="number" id="ttl" name="ttl"><br><br>
+
+    <input type="submit" value="Shorten URL">
+</form>
+</body>
+</html>

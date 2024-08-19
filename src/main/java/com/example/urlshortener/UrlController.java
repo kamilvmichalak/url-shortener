@@ -22,7 +22,7 @@ public class UrlController {
         this.urlService = urlService;
     }
 
-    @PostMapping("/shorten")
+    @PostMapping("/create-short-url")
     public ResponseEntity<?> createShortUrl(@RequestParam("url") String originalUrl,
                                             @RequestParam("shortId") Optional<String> shortId,
                                             @RequestParam("ttl") Optional<Integer> ttl) {
@@ -54,7 +54,7 @@ public class UrlController {
         }
     }
 
-    @DeleteMapping("/{shortId}")
+    @DeleteMapping("/delete-short-url")
     public ResponseEntity<Void> deleteUrl(@PathVariable("shortId") String shortId) {
         urlService.deleteUrlByShortId(shortId);
         logger.info("Short URL deleted: {}", shortId);
