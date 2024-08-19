@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+    <appender name="FILE-JSON" class="ch.qos.logback.core.FileAppender">
+        <file>logs/url-shortener.log</file>
+        <encoder>
+            <json-encoder />
+        </encoder>
+    </appender>
+
+    <root level="INFO">
+        <appender-ref ref="FILE-JSON" />
+    </root>
+</configuration>
