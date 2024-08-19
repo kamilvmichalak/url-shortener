@@ -15,18 +15,19 @@ public class UrlService {
     }
 
     public Url createShortUrl(String originalUrl, String shortId, Integer ttl) {
-        Url url = new Url();
-        url.setOriginalUrl(originalUrl);
-        url.setShortId(shortId);
-        url.setTtl(ttl);
+        if (urlRepository.existsByShortId(shortId)) {
+            throw new IllegalArgumentException("Short ID already in use: " + shortId);
+        }
+        Url url = new Url(originalUrl, shortId, ttl);
         return urlRepository.save(url);
     }
 
     public Optional<Url> getUrlByShortId(String shortId) {
-        return Optional.ofNullable(urlRepository.findByShortId(shortId));
+        return urlRepository.findByShortId(shortId)
+                .filter(url -> !url.isExpired());
     }
 
     public void deleteUrlByShortId(String shortId) {
-        urlRepository.deleteById(getUrlByShortId(shortId).orElseThrow().getId());
+        urlRepository.deleteByShortId(shortId);
     }
 }

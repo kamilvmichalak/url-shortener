@@ -2,6 +2,10 @@ package com.example.urlshortener;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface UrlRepository extends JpaRepository<Url,Long> {
-    Url findByShortId(String shortId);
+import java.util.Optional;
+
+public interface UrlRepository extends JpaRepository<Url, Long> {
+    Optional<Url> findByShortId(String shortId);
+    boolean existsByShortId(String shortId);
+    void deleteByShortId(String shortId);
 }
