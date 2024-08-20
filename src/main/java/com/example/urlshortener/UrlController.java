@@ -27,7 +27,9 @@ public class UrlController {
                                             @RequestParam("shortId") Optional<String> shortId,
                                             @RequestParam("ttl") Optional<Integer> ttl) {
         try {
-            String generatedShortId = shortId.orElseGet(() -> RandomStringUtils.randomAlphanumeric(6));
+            String generatedShortId = shortId.filter(s -> !s.isEmpty())
+                    .orElseGet(() -> RandomStringUtils.randomAlphanumeric(6));
+
             Url url = urlService.createShortUrl(originalUrl, generatedShortId, ttl.orElse(0));
             logger.info("Short URL created: {}", generatedShortId);
             return new ResponseEntity<>(url, HttpStatus.CREATED);
