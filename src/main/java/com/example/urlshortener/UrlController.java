@@ -1,5 +1,6 @@
 package com.example.urlshortener;
 
+import jakarta.servlet.http.HttpServletRequest;
 import org.apache.commons.lang3.RandomStringUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -23,16 +24,20 @@ public class UrlController {
     }
 
     @PostMapping("/create-short-url")
-    public ResponseEntity<?> createShortUrl(@RequestParam("url") String originalUrl,
-                                            @RequestParam("shortId") Optional<String> shortId,
-                                            @RequestParam("ttl") Optional<Integer> ttl) {
+    public ResponseEntity<String> createShortUrl(HttpServletRequest request,
+                                                 @RequestParam("url") String originalUrl,
+                                                 @RequestParam("shortId") Optional<String> shortId,
+                                                 @RequestParam("ttl") Optional<Integer> ttl) {
         try {
             String generatedShortId = shortId.filter(s -> !s.isEmpty())
                     .orElseGet(() -> RandomStringUtils.randomAlphanumeric(6));
 
-            Url url = urlService.createShortUrl(originalUrl, generatedShortId, ttl.orElse(0));
+            urlService.createShortUrl(originalUrl, generatedShortId, ttl.orElse(0));
             logger.info("Short URL created: {}", generatedShortId);
-            return new ResponseEntity<>(url, HttpStatus.CREATED);
+
+            // Construct the full URL dynamically
+            String shortUrl = request.getScheme() + "://" + request.getServerName() + ":" + request.getServerPort() + "/api/" + generatedShortId;
+            return ResponseEntity.ok("New short URL: " + shortUrl);
         } catch (IllegalArgumentException e) {
             logger.error("Error creating short URL: {}", e.getMessage());
             return new ResponseEntity<>(e.getMessage(), HttpStatus.BAD_REQUEST);
