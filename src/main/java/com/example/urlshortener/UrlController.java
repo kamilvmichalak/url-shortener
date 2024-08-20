@@ -56,10 +56,14 @@ public class UrlController {
         }
     }
 
-    @DeleteMapping("/delete-short-url")
-    public ResponseEntity<Void> deleteUrl(@PathVariable("shortId") String shortId) {
-        urlService.deleteUrlByShortId(shortId);
-        logger.info("Short URL deleted: {}", shortId);
-        return ResponseEntity.noContent().build();
+    @PostMapping("/delete-short-url")
+    public ResponseEntity<String> deleteUrl(@RequestParam("shortId") String shortId) {
+        Optional<Url> url = urlService.getUrlByShortId(shortId);
+        if (url.isPresent()) {
+            urlService.deleteUrlByShortId(shortId);
+            logger.info("Short URL deleted: {}", shortId);
+            return ResponseEntity.ok("Short URL with ID " + shortId + " has been deleted successfully.");
+        } else return ResponseEntity.ok("Short URL with ID " + shortId + " not found in the database!");
+
     }
 }
